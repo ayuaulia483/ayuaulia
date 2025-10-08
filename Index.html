@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portofolios | ayu aulia</title>
+    <meta name="description" content="Portofolio single page: Hero, Tentang, Pendidikan, Sertifikat, Kontak." />
+    <style>
+      :root {
+        /* Palet (maks 5 warna) */
+        /* <CHANGE> Fallback untuk primary karena #FFBCD tidak valid; gunakan #ffbcd1 sampai Anda konfirmasi */
+        --color-primary: #ffbcd1;
+        --color-secondary: #ff9cb5;
+        --color-bg: #ffffff;
+        --color-text: #111827; /* near-slate-900 */
+        --color-muted: #f3f4f6; /* near-gray-100 */
+
+        --radius: 0.5rem;
+        --container: 1100px;
+      }
+
+      /* Reset ringkas dan tipografi sistem (maks 2 font family) */
+      *, *::before, *::after { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--color-text);
+        background: var(--color-bg);
+        line-height: 1.6;
+      }
+      img { max-width: 100%; display: block; }
+      a { color: inherit; text-decoration: none; }
+      :focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 2px; }
+
+      .container {
+        width: 100%;
+        max-width: var(--container);
+        margin-inline: auto;
+        padding-inline: 1rem;
+      }
+
+      /* Navbar */
+      .skip-link {
+        position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden;
+      }
+      .skip-link:focus { position: static; width: auto; height: auto; padding: .5rem 1rem; background: var(--color-secondary); color: var(--color-text); border-radius: var(--radius); }
+
+      header {
+        position: sticky;
+        top: 0;
+        background: var(--color-bg);
+        border-bottom: 1px solid var(--color-muted);
+        z-index: 50;
+      }
+      .nav {
+        display: flex; align-items: center; justify-content: space-between;
+        min-height: 64px; gap: 1rem;
+      }
+      .brand { font-weight: 700; letter-spacing: .2px; }
+      .brand-badge {
+        display: inline-block; padding: .25rem .5rem; border-radius: 999px;
+        background: var(--color-primary); border: 1px solid var(--color-text);
+      }
+      .nav-links {
+        display: none; gap: 1rem; align-items: center;
+      }
+      .nav-links a {
+        padding: .5rem .75rem; border-radius: .375rem;
+      }
+      .nav-links a[aria-current="page"], .nav-links a:hover {
+        background: var(--color-muted);
+      }
+      .nav-toggle {
+        display: inline-flex; align-items: center; justify-content: center;
+        border: 1px solid var(--color-text); background: var(--color-primary);
+        padding: .5rem .75rem; border-radius: .375rem; cursor: pointer;
+      }
+
+      @media (min-width: 768px) {
+        .nav-links { display: flex; }
+        .nav-toggle { display: none; }
+      }
+
+      .mobile-menu {
+        display: none; border-top: 1px solid var(--color-muted); padding: .5rem 0;
+      }
+      .mobile-menu.open { display: block; }
+      .mobile-menu a {
+        display: block; padding: .5rem .75rem; border-radius: .375rem;
+      }
+      .mobile-menu a:hover { background: var(--color-muted); }
+
+      /* Hero */
+      .hero {
+        padding: 4rem 0 2rem;
+        background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-bg) 60%);
+      }
+      .hero-inner {
+        display: grid; gap: 1.25rem;
+      }
+      .kicker {
+        display: inline-block; font-size: .875rem; padding: .25rem .5rem;
+        border-radius: 999px; background: var(--color-secondary);
+        border: 1px solid var(--color-text);
+      }
+      .title { font-size: clamp(1.75rem, 4vw, 3rem); line-height: 1.2; font-weight: 800; }
+      .subtitle { font-size: 1rem; color: #1f2937; } /* gunakan tone teks default, tidak melebihi 5 warna total */
+      .skills {
+        display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0 0;
+      }
+      .skill {
+        padding: .25rem .5rem; border-radius: 999px;
+        background: var(--color-muted);
+        border: 1px solid var(--color-text);
+        font-size: .875rem;
+      }
+      .actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: .5rem; }
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: .625rem 1rem; border-radius: .5rem; border: 1px solid var(--color-text);
+        background: var(--color-secondary); color: var(--color-text); cursor: pointer;
+        transition: filter .2s ease, transform .2s ease;
+      }
+      .btn:hover { filter: brightness(.95); transform: translateY(-1px); }
+      .btn-outline { background: transparent; }
+      
+      /* --- KODE YANG DIPERBAIKI DIMULAI DI SINI --- */
+      .hero-figure {
+        margin-top: 1rem;
+        border-radius: var(--radius);
+        aspect-ratio: 3 / 4; /* Diubah agar menjadi potret */
+        overflow: hidden; 
+        border: 1px solid var(--color-text); 
+        background: var(--color-muted); 
+      }
+
+      .hero-figure img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+      }
+      /* --- KODE YANG DIPERBAIKI BERAKHIR DI SINI --- */
+
+      /* Sections generic */
+      section { padding: 3rem 0; }
+      section h2 {
+        font-size: clamp(1.25rem, 2.5vw, 2rem); line-height: 1.25; font-weight: 800; margin: 0 0 .5rem;
+      }
+      .section-desc { color: #1f2937; margin-bottom: 1rem; }
+
+      /* Tentang */
+      .about { background: var(--color-bg); }
+      .about .panel {
+        background: var(--color-muted); border: 1px solid var(--color-text); border-radius: var(--radius);
+        padding: 1rem;
+      }
+
+      /* Pendidikan */
+      .timeline { display: grid; gap: 1rem; }
+      .item {
+        border: 1px solid var(--color-text); border-radius: var(--radius); padding: 1rem; background: var(--color-bg);
+      }
+      .item h3 { margin: 0 0 .25rem; font-size: 1rem; }
+      .item .meta { font-size: .875rem; opacity: .9; }
+
+      /* Sertifikat */
+      .grid {
+        display: grid; gap: 1rem;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 640px) {
+        .grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (min-width: 1024px) {
+        .grid { grid-template-columns: repeat(3, 1fr); }
+      }
+      .card {
+        background: var(--color-bg); border: 1px solid var(--color-text); border-radius: var(--radius);
+        padding: 1rem; display: flex; flex-direction: column; gap: .5rem;
+      }
+      .card a.more { text-decoration: underline; }
+
+      /* Kontak */
+      .contact-list {
+        display: grid; gap: .75rem;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 480px) {
+        .contact-list { grid-template-columns: repeat(3, 1fr); }
+      }
+      .contact-btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+        padding: .75rem 1rem; border-radius: .5rem; border: 1px solid var(--color-text);
+        background: var(--color-primary); color: var(--color-text);
+        transition: filter .2s ease, transform .2s ease;
+        text-align: center;
+      }
+      .contact-btn:hover { filter: brightness(.95); transform: translateY(-1px); }
+
+      /* Footer */
+      footer {
+        border-top: 1px solid var(--color-muted);
+        padding: 1.5rem 0;
+        background: var(--color-bg);
+      }
+      .foot {
+        display: flex; flex-direction: column; gap: .75rem; align-items: center; justify-content: center; text-align: center;
+      }
+      @media (min-width: 640px) {
+        .foot { flex-direction: row; justify-content: space-between; text-align: left; }
+      }
+
+      /* Animasi sederhana: reveal on scroll */
+      .reveal { opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
+      .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Lewati ke konten utama</a>
+
+    <header>
+      <div class="container nav" role="navigation" aria-label="Navigasi utama">
+        <div class="brand" aria-label="Brand">
+          <span class="brand-badge">A</span>Ayu Aulia 
+        </div>
+
+        <nav class="nav-links" aria-label="Tautan bagian">
+          <a href="#hero" data-nav>Beranda</a>
+          <a href="#tentang" data-nav>Tentang</a>
+          <a href="#pendidikan" data-nav>Pendidikan</a>
+          <a href="#sertifikat" data-nav>Hobi</a>
+          <a href="#kontak" data-nav>Kontak</a>
+        </nav>
+
+        <button class="nav-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false">
+          Menu
+        </button>
+      </div>
+
+      <div id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Menu seluler">
+        <div class="container">
+          <a href="#hero" data-nav>Beranda</a>
+          <a href="#tentang" data-nav>Tentang</a>
+          <a href="#pendidikan" data-nav>Pendidikan</a>
+          <a href="#sertifikat" data-nav>Hobi</a>
+          <a href="#kontak" data-nav>Kontak</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+       <section id="hero" class="hero">
+        <div class="container hero-inner">
+          <span class="kicker reveal">Portofolio</span>
+          <h1 class="title reveal" style="margin: 0;">
+            Halo, saya <span style="background: var(--color-primary); border: 1px solid var(--color-text); border-radius: .375rem; padding: 0 .35rem;">Ayu Aulia Sariyanti</span>
+          </h1>
+          <p class="subtitle reveal">
+            Keahlian saya: <strong>menari</strong>, <strong>menyanyi</strong>, dan <strong>memasak</strong>.
+          </p>
+         
+          <div class="actions reveal">
+            <a href="#kontak" class="btn" aria-label="Menuju ke bagian kontak">Hubungi Saya</a>
+            <a href="#" class="btn btn-outline" aria-label="Unduh CV">tentang saya</a>
+          </div>
+          <figure class="hero-figure reveal" role="img" aria-label="Foto profil Ayu Aulia Sariyanti">
+            <img src="ay2.jpg" alt="Foto Profile Ayu">
+          </figure>
+        </div>
+      </section>
+
+       <section id="tentang" class="about">
+        <div class="container">
+          <h2 class="reveal">Tentang Saya</h2>
+          <p class="section-desc reveal">
+            Saya adalah mahasiswa di Universitas Negeri Medan, Fakultas Matematika dan Ilmu Pengetahuan Alam, program studi Ilmu Komputer.
+          </p>
+          <div class="panel reveal">
+            <p style="margin: 0;">
+             Berada di universitas dan jurusan yang saya dapat sekarang adalah hal yang tidak pernah terbesit sedikitpun di pikiran saya. Namun, jika kita terus mengeluh, itu malah akan membuat langkah kita semakin berat. Maka, saya harus percaya bahwa saya bisa dan mampu menjalani setiap proses yang ada.
+            </p>
+          </div>
+        </div>
+      </section>
+
+       <section id="pendidikan">
+        <div class="container">
+          <h2 class="reveal">Pendidikan</h2>
+          <p class="section-desc reveal">Riwayat pendidikan.</p>
+          <div class="timeline">
+            <article class="item reveal">
+              <h3> SD MIS ARRAUDHLATUL HASANAH</h3>
+              <div class="meta"> 2013–2019</div>
+              <p></p>
+            </article>
+            <article class="item reveal">
+              <h3>SMP PESANTREN DARUL ARAFAH RAYA</h3>
+              <div class="meta">  2019–2022</div>
+              <p></p>
+            </article>
+             <article class="item reveal">
+              <h3>SMA PESANTREN DARUL ARAFAH RAYA</h3>
+              <div class="meta">2022–2024</div>
+              <p>jurusan ilmu pengetahuan sodial</p>
+            </article>
+             <article class="item reveal">
+              <h3>MAHASISWA UNIVERSITAS NEGERI MEDAN</h3>
+              <div class="meta">2025–sampai sekarang</div>
+              <p>fakultas matematika dan ilmu pengetahuan alam prodi ilmu komputer</p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="sertifikat">
+        <div class="container">
+          <h2 class="reveal">HOBI</h2>
+          <p class="section-desc reveal">hobi saya yaitu:</p>
+          <div class="grid">
+            <article class="card reveal">
+              <h3>mendengarkan musik</h3>
+              <p>bagi saya melakukan suatu pekerjaaan dengan mendengarkan musik pekerjaan yang kita lakukan lebih terasa menyenangkan.mendengarkan musik membuat pikiran kita jauh lebih tenang.</p>
+              <a class="more" href="#" target="_blank" rel="noopener"></a>
+            </article>
+            <article class="card reveal">
+              <h3>traveling</h3>
+              <p>saya menyukai traveling karena memberi kesempatan untuk menjelajahi tempat baru serta mengenal budaya yang berbeda-beda.saya sering traveling karena ingin menyegarkan pikiran ,menambah wawasan, dan mengajarkan saya beradaptasi di tempat yang berbeda.</p>
+              <a class="more" href="#" target="_blank" rel="noopener"></a>
+            </article>
+            <article class="card reveal">
+              <h3>menari</h3>
+              <p>menari merupakan hobi saya yang sangat saya sukai karena dengan menari saya dapat meningkatkan rasa percaya diri.</p>
+              <a class="more" href="#" target="_blank" rel="noopener"></a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+       <section id="kontak">
+        <div class="container">
+          <h2 class="reveal">Kontak Saya</h2>
+          <p class="section-desc reveal">hubungi saya melalui media sosial berikut:</p>
+          <div class="contact-list">
+            <a class="contact-btn reveal" href="https://wa.me/6281234567890" target="_blank" rel="noopener" aria-label="Hubungi via WhatsApp">
+              085762046524
+            </a>
+            <a class="contact-btn reveal" href="https://instagram.com/username" target="_blank" rel="noopener" aria-label="Kunjungi profil Instagram">
+              @ayuu.auliaa__
+            </a>
+            <a class="contact-btn reveal" href="https://tiktok.com/@username" target="_blank" rel="noopener" aria-label="Kunjungi profil TikTok">
+              ayuuauliaa_
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container foot">
+        <div>&copy; <span id="year"></span> </div>MADE BY AYU AULIA
+        <div> <span style="font-weight:600"></span> / <span style="font-weight:600"></span> </div>
+      </div>
+    </footer>
+
+    <script>
+      // <CHANGE> Mobile menu toggle
+      const toggle = document.querySelector('.nav-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      toggle?.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      // <CHANGE> Active link highlighting berdasarkan section terlihat
+      const navLinks = Array.from(document.querySelectorAll('[data-nav]'));
+      const sections = navLinks
+        .map(a => document.querySelector(a.getAttribute('href')))
+        .filter(Boolean);
+
+      const setActive = (id) => {
+        navLinks.forEach(a => {
+          const match = a.getAttribute('href') === '#' + id;
+          a.setAttribute('aria-current', match ? 'page' : '');
+        });
+      };
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      }, { rootMargin: '-50% 0px -40% 0px', threshold: 0 });
+
+      sections.forEach(sec => io.observe(sec));
+
+      // <CHANGE> Reveal on scroll
+      const reveals = document.querySelectorAll('.reveal');
+      const ro = new IntersectionObserver((entries, obs) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      reveals.forEach(el => ro.observe(el));
+
+      // <CHANGE> Tahun dinamis di footer
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
